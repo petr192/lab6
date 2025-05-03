@@ -39,6 +39,7 @@ services:
     volumes:
       #- ./dags:/usr/local/airflow/dags
       - ./airflow.cfg:/opt/airflow/airflow.cfg  # Меняем место
+      - ./data:/usr/local/airflow/files
     ports:
       - "8080:8080"
     entrypoint: airflow webserver
@@ -54,5 +55,6 @@ services:
     volumes:
       #- ./dags:/usr/local/airflow/dags
       - ./airflow.cfg:/opt/airflow/airflow.cfg  # Меняем место
+      - ./data:/usr/local/airflow/files
     entrypoint: airflow scheduler
 
