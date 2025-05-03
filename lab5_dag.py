@@ -24,9 +24,14 @@ CLICKHOUSE_CONN = {
 }
 REDIS_CONN = {"host": '89.208.211.89', "port": 6379, "db": 1}
 
-CSV_PATH = "/home/ubuntu/sku_cat.csv"
-JSONL_IN = "/home/ubuntu/_tech_events.jsonl"
-JSONL_OUT = "/home/ubuntu/cleaned.jsonl"
+#CSV_PATH = "/home/ubuntu/sku_cat.csv"
+#JSONL_IN = "/home/ubuntu/_tech_events.jsonl"
+#JSONL_OUT = "/home/ubuntu/cleaned.jsonl"
+
+BASE_DIR = "/usr/local/airflow/files"
+CSV_PATH = f"{BASE_DIR}/sku_cat.csv"
+JSONL_IN = f"{BASE_DIR}/_tech_events.jsonl"
+JSONL_OUT = f"{BASE_DIR}/cleaned.jsonl"
 
 default_args = {"start_date": datetime(2025, 4, 20)}
 dag = DAG("lab5_pipeline", schedule_interval=None, default_args=default_args, catchup=False)
