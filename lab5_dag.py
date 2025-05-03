@@ -5,7 +5,8 @@ import psycopg2
 import csv
 import json
 import redis
-from clickhouse_connect import get_client
+from clickhouse_driver import Client  # Используем clickhouse_driver
+#from clickhouse_connect import get_client
 
 # Константы
 POSTGRES_CONN = {
@@ -83,7 +84,8 @@ def clean_jsonl():
 
 
 def load_to_clickhouse():
-    ch_client = get_client(**CLICKHOUSE_CONN)
+    #ch_client = get_client(**CLICKHOUSE_CONN)
+    ch_client = Client(**CLICKHOUSE_CONN)
 
     # sku_cat
     with open(CSV_PATH, 'r') as f:
@@ -99,7 +101,8 @@ def load_to_clickhouse():
 
 def aggregate_clickhouse():
     ch_client = get_client(**CLICKHOUSE_CONN)
-    ch_client.command("""
+   # ch_client.command(
+    ch_client.execute( """
         INSERT INTO petr_yurlov.lab5_ans
         WITH cl AS (
             SELECT *, toDate(timestamp) as dt, formatDateTime(timestamp, '%H') || 'h' as hr
