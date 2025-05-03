@@ -18,6 +18,7 @@ services:
     environment:
       - AIRFLOW_HOME=/usr/local/airflow
       - PATH=/root/.local/bin:$PATH
+      - AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow@postgres2:5432/airflow
     volumes:
       - ./dags:/usr/local/airflow/dags
       - ./airflow.cfg:/opt/airflow/airflow.cfg  # Меняем место
@@ -36,6 +37,7 @@ services:
     environment:
       - AIRFLOW_HOME=/usr/local/airflow
       - PATH=/root/.local/bin:$PATH
+      - AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow@postgres2:5432/airflow
     volumes:
       #- ./dags:/usr/local/airflow/dags
       - ./airflow.cfg:/opt/airflow/airflow.cfg  # Меняем место
@@ -52,6 +54,7 @@ services:
     environment:
       - AIRFLOW_HOME=/usr/local/airflow
       - PATH=/root/.local/bin:$PATH
+      - AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow@postgres2:5432/airflow
     volumes:
       #- ./dags:/usr/local/airflow/dags
       - ./airflow.cfg:/opt/airflow/airflow.cfg  # Меняем место

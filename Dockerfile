@@ -1,6 +1,11 @@
 FROM python:3.8.13
 
-RUN pip install psycopg2-binary==2.9.9 apache-airflow==2.9.2 clickhouse-driver==0.2.8 redis==5.0.7 clickhouse-connect==0.6.5
+# Устанавливаем зависимости без --user
+RUN pip install \
+    apache-airflow==2.9.2 \
+    psycopg2-binary==2.9.9 \
+    clickhouse-connect==0.6.5 \
+    redis==5.0.7
 
 RUN mkdir -p /usr/local/airflow/dags
 WORKDIR /usr/local/airflow
