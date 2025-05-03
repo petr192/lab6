@@ -5,8 +5,8 @@ import psycopg2
 import csv
 import json
 import redis
-from clickhouse_driver import Client  # Используем clickhouse_driver
 #from clickhouse_connect import get_client
+from clickhouse_driver import Client
 
 # Константы
 POSTGRES_CONN = {
@@ -19,7 +19,8 @@ POSTGRES_CONN = {
 CLICKHOUSE_CONN = {
     "host": '212.233.73.6',
     "port": 8123,
-    "username": 'petr_yurlov',
+    #"username": 'petr_yurlov',
+    "user": 'petr_yurlov',
     "password": 'UxcVHmJIJSyOTjZq',
     "database": 'petr_yurlov'
 }
@@ -84,25 +85,30 @@ def clean_jsonl():
 
 
 def load_to_clickhouse():
-    #ch_client = get_client(**CLICKHOUSE_CONN)
     ch_client = Client(**CLICKHOUSE_CONN)
 
     # sku_cat
     with open(CSV_PATH, 'r') as f:
         header = f.readline().strip().split(',')
         rows = [line.strip().split(',') for line in f]
-    ch_client.insert(f'petr_yurlov.lab5_pg', rows, column_names=header)
+    #ch_client.insert(f'petr_yurlov.lab5_pg', rows, column_names=header)
+    query = f"INSERT INTO petr_yurlov.lab5_pg ({', '.join(header)}) VALUES"
+    ch_client.execute(query, rows)
 
     # cleaned.jsonl
     with open(JSONL_OUT, 'r') as f:
         rows = [json.loads(line.strip()) for line in f]
-    ch_client.insert('petr_yurlov.lab5', rows)
+    #ch_client.insert('petr_yurlov.lab5', rows)
+    columns = rows[0].keys()
+    data = [tuple(row[col] for col in columns) for row in rows]
+
+    query = f"INSERT INTO petr_yurlov.lab5 ({', '.join(columns)}) VALUES"
+    ch_client.execute(query, data)
 
 
 def aggregate_clickhouse():
     ch_client = get_client(**CLICKHOUSE_CONN)
-   # ch_client.command(
-    ch_client.execute( """
+    ch_client.execute("""
         INSERT INTO petr_yurlov.lab5_ans
         WITH cl AS (
             SELECT *, toDate(timestamp) as dt, formatDateTime(timestamp, '%H') || 'h' as hr
@@ -149,4 +155,3 @@ agg_task = PythonOperator(task_id="aggregate_clickhouse", python_callable=aggreg
 redis_task = PythonOperator(task_id="push_to_redis", python_callable=push_to_redis, dag=dag)
 
 extract_task >> clean_task >> clickhouse_task >> agg_task >> redis_task
-
