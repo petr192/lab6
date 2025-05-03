@@ -9,3 +9,4 @@ ENV PATH=/root/.local/bin:$PATH
 
 COPY airflow.cfg /usr/local/airflow/airflow.cfg
 COPY home/ubuntu/lab6/lab5_dag.py /usr/local/airflow/dags/lab.py
+
